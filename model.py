@@ -16,14 +16,40 @@ class Model(db.Model):
     """Car model."""
 
     __tablename__ = "models"
-    pass
+    
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    year = db.Column(db.Integer, nullable=False)
+    brand_name = db.Column(db.String(50), db.ForeignKey('brands.name'))
+    name = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        """Object format when printed."""
+
+        # I slightly adjusted naming conventions to help myself, though
+        # I know this isn't convention.
+        return "<model_year=%d brand_name=%s model_name=%s>" % (
+            self.year, self.brand_name, self.name)
 
 
 class Brand(db.Model):
     """Car brand."""
 
     __tablename__ = "brands"
-    pass
+    
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    founded = db.Column(db.Integer)
+    headquarters = db.Column(db.String(50))
+    discontinued = db.Column(db.Integer)
+
+    # Defining a relationship to models (one brand can have many models)
+    models = db.relationship("Model", backref=db.backref("brand"))
+
+    def __repr__(self):
+        """Object format when printed."""
+
+        return "<brand_id=%d, brand_name=%s>" % (
+            self.id, self.name)
 
 
 # End Part 1
