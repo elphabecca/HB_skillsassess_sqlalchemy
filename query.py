@@ -19,6 +19,7 @@ init_app()
 # Part 2: Write queries
 
 # I wrote the queries only -- I did not assign them to variables, and I hope that's OK.
+# I also commented the queries out to make interactive mode less ... just less.
 
 # Question: Get the brand with the **id** of 8."
 # Brand.query.get(8)
@@ -51,7 +52,7 @@ def get_model_info(year):
     '''Takes in a year, and prints out each model, brand_name, and brand
     headquarters for that year using only ONE database query.'''
 
-    # ATTEMPT 1 (works but my 2nd attempt is better)
+    # ATTEMPT 1 (works but my 2nd attempt is way better)
     # year_cars = db.session.query(Model.name,
     #                              Model.brand_name,
     #                              Brand.headquarters).filter(Model.year==year).join(Brand).all()
@@ -82,15 +83,45 @@ def get_brands_summary():
 # 1. What is the returned value and datatype of
 # ``Brand.query.filter_by(name='Ford')``?
 
+# ANSWER: It's an object.
+# It represents a query for class "Brand" where the name attribute is equal to "Ford".
+# No query is run until it is "fetched", using methonds like .all(), .get(), or .one().
+
 # 2. In your own words, what is an association table, and what *type* of
 # relationship does an association table manage?
+
+# ANSWER: A bridge b/w two places (tables).  The point is to provide a functional
+# path b/w two tables, but not add anything new to the db.  It's a sep. table
+# because it holds and idea b/w items with a many to many relationship, but it's
+# just a class of middle table. Well, I guess middle table would be a sub-class of
+# an association table, b/c a middle class contains another piece of information
+# (like a comment) whereas the association table just holds the idea and a place for the
+# many to many relationship to be executed.
 
 # -------------------------------------------------------------------
 # Part 3
 
 def search_brands_by_name(mystr):
-    pass
+    """returns a list of objects that are brands whose name contains or is equal 
+    to the input string."""
+    
+    mystr_insert = '%'+mystr+'%'
+
+    return Brand.query.filter(Brand.name.ilike(mystr_insert)).all()
 
 
 def get_models_between(start_year, end_year):
-    pass
+    """returns a list of objects that are models with years that fall between the 
+    start year (inclusive) and end year (exclusive)."""
+    
+    year_list = [year for year in range(start_year, end_year)]
+
+    return Model.query.filter(Model.year.in_(year_list)).all()
+
+
+
+
+
+
+
+
